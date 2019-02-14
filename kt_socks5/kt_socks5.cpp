@@ -24,7 +24,7 @@ bool valid_port(uint16_t p)
 
 int main(int argc, char *argv[])
 {
-	po::options_description desc("ext_socks");
+	po::options_description desc("kt_socks");
 	desc.add_options()
 		("help,h", "produce help message")
 		("port,p", po::value<uint16_t>(), "port of forward socks server")
@@ -33,10 +33,18 @@ int main(int argc, char *argv[])
 		("reverse-tunnel,t", po::value<uint16_t>(), "tunnel port of reverse server")
 		;
 
-
 	po::variables_map vm;
-	po::store(po::parse_command_line(argc, argv, desc), vm);
-	po::notify(vm);
+
+	try
+	{
+		po::store(po::parse_command_line(argc, argv, desc), vm);
+		po::notify(vm);
+	}
+	catch (std::exception& e)
+	{
+		std::cerr << "Exception: " << e.what() << std::endl;
+		return 0;
+	}
 
 	if (vm.count("help"))
 	{
