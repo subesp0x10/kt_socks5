@@ -214,6 +214,25 @@ void control_session::server_handshake_ok()
 	established = true;
 }
 
+//nothing to read, just check wether this session is disconnected
+void control_session::server_read()
+{
+	auto self(shared_from_this());
+	auto handler = [this, self](const boost::system::error_code& ec, std::size_t length) {
+
+		if (!ec)
+		{
+			server_read();
+		}
+		else
+		{
+			close(ec);
+		}
+	};
+
+	boost::asio::async_read(sock_, boost::asio::buffer(recv_buff, recv_buff.size()), boost::asio::transfer_exactly(sizeof(int)), handler);
+}
+
 void control_session::close(const boost::system::error_code& ec)
 {
 	std::cout << "[control session]  disconnected : " << ec.message() << std::endl;

@@ -25,6 +25,7 @@ private:
 
 	void client_handshake_ok();
 	void server_handshake_ok();
+	void server_read();
 
 	void close(const boost::system::error_code & ec);
 
